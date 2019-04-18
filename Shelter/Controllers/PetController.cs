@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -71,17 +70,6 @@ namespace Shelter.Controllers
             var modified = await Store.StoreAsync(modification);
 
             return Renderer.ToView(modified);
-        }
-    }
-
-    [ApiVersion("1.0")]
-    [ApiController]
-    public class PetV1Controller : PetController<Pet.PetV1>
-    {
-        public PetV1Controller(IDatastore<Pet> store, IModelRenderer<Pet, Pet.PetV1> renderer)
-            : base(store, renderer)
-        {
-
         }
     }
 }
