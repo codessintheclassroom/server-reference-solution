@@ -2,7 +2,6 @@ namespace Shelter.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
