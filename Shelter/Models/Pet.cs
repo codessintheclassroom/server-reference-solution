@@ -8,7 +8,6 @@ namespace Shelter.Models
     public class Pet
     {
 
-        [Required]
         public string Id { get; set; }
 
         [Required]
