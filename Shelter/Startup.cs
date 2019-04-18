@@ -27,8 +27,10 @@ namespace Shelter
             services.AddApiVersioning();
 
             services.AddSingleton<IModelRenderer<Pet, Pet.PetV1>, Pet.PetV1.Renderer>();
+            services.AddSingleton<IModelRenderer<Inquiry, Inquiry.InquiryV1>, Inquiry.InquiryV1.Renderer>();
 
             services.AddSingleton<IDatastore<Pet>, PetMemoryStore>();
+            services.AddSingleton<IDatastore<Inquiry>, InquiryMemoryStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
