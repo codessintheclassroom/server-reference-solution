@@ -34,7 +34,10 @@ namespace Shelter.Controllers
         [Route("api/v{version:apiVersion}/pets")]
         public virtual async Task<ActionResult<TView>> Create([FromBody]TView pet)
         {
-            var newPet = await Store.StoreAsync(Renderer.FromView(pet));
+            var model = Renderer.FromView(pet);
+            model.Id = null;
+
+            var newPet = await Store.StoreAsync(model);
 
             return Created(Url.Action("GetPet", new
             {
