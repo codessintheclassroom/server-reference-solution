@@ -12,6 +12,6 @@ namespace Shelter.Store
 
         Task<TModel> StoreAsync(TModel item);
 
-        Task<bool> RemoveAsync(TModel item);
+        Task<bool> RemoveAsync(string id);
     }
 }

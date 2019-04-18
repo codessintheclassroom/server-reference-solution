@@ -23,9 +23,9 @@ namespace Shelter.Store
             return Task.FromResult((IEnumerable<Pet>)this.store.Values.ToArray());
         }
 
-        public Task<bool> RemoveAsync(Pet item)
+        public Task<bool> RemoveAsync(string id)
         {
-            return Task.FromResult(this.store.TryRemove(item.Id, out var pet));
+            return Task.FromResult(this.store.TryRemove(id, out var pet));
         }
 
         public Task<Pet> StoreAsync(Pet item)
