@@ -9,7 +9,7 @@
                 "build",
                 "${workspaceFolder}/Shelter/Shelter.csproj"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "publish",
@@ -19,7 +19,7 @@
                 "publish",
                 "${workspaceFolder}/Shelter/Shelter.csproj"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "watch",
@@ -27,10 +27,11 @@
             "type": "process",
             "args": [
                 "watch",
-                "run",
-                "${workspaceFolder}/Shelter/Shelter.csproj"
+                "--project",
+                "${workspaceFolder}/Shelter/Shelter.csproj",
+                "run"
             ],
-            "problemMatcher": "$tsc"
+            "problemMatcher": "$msCompile"
         }
     ]
 }
