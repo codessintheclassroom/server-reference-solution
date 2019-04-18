@@ -32,6 +32,18 @@
                 "run"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch tests",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "--project",
+                "${workspaceFolder}/Shelter.Tests/Shelter.Tests.csproj",
+                "test"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
