@@ -15,7 +15,7 @@ namespace Shelter.Store
         {
             if (this.store.TryGetValue(id, out var pet))
                 return Task.FromResult(pet);
-            return null;
+            return Task.FromResult<Pet>(null);
         }
 
         public Task<IEnumerable<Pet>> ListAsync()
