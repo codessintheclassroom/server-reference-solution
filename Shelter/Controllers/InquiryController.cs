@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shelter.Models;
 using Shelter.Store;
@@ -23,6 +24,7 @@ namespace Shelter.Controllers
         // GET api/v1/inquiries
         [HttpGet]
         [Route("api/v{version:apiVersion}/inquiries")]
+        [Authorize("Inquiries.Read")]
         public virtual async Task<ActionResult<IEnumerable<TView>>> GetList()
         {
             var inquiries = await Store.ListAsync();
@@ -50,6 +52,7 @@ namespace Shelter.Controllers
         [HttpGet]
         [Route("api/v{version:apiVersion}/inquiry/{id}")]
         [ActionName("GetInquiry")]
+        [Authorize("Inquiries.Read")]
         public virtual async Task<ActionResult<TView>> Get(string id)
         {
             var inquiry = await Store.GetAsync(id);
@@ -62,6 +65,7 @@ namespace Shelter.Controllers
         // PUT api/v1/inquiry/{id}
         [HttpPut]
         [Route("api/v{version:apiVersion}/inquiry/{id}")]
+        [Authorize("Inquiries.Write")]
         public virtual async Task<ActionResult<TView>> Modify(string id, [FromBody]TView pet)
         {
             if (await Store.GetAsync(id) == null)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shelter.Models;
 using Shelter.Store;
@@ -31,6 +32,7 @@ namespace Shelter.Controllers
 
         // POST api/v1/pets
         [HttpPost]
+        [Authorize("Pets.Write")]
         [Route("api/v{version:apiVersion}/pets")]
         public virtual async Task<ActionResult<TView>> Create([FromBody]TView pet)
         {
@@ -61,6 +63,7 @@ namespace Shelter.Controllers
 
         // PUT api/v1/pet/{id}
         [HttpPut]
+        [Authorize("Pets.Write")]
         [Route("api/v{version:apiVersion}/pet/{id}")]
         public virtual async Task<ActionResult<TView>> Modify(string id, [FromBody]TView pet)
         {
