@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Shelter.Config;
 using Shelter.Models;
 using Shelter.Store;
 using System;
@@ -90,6 +91,9 @@ namespace Shelter
 
             services.AddSingleton<IDatastore<Pet>, PetMemoryStore>();
             services.AddSingleton<IDatastore<Inquiry>, InquiryMemoryStore>();
+
+            services.Configure<Seed>(Configuration.GetSection("Seed"));
+            services.AddHostedService<Services.SeedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
