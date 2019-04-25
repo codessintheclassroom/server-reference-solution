@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Shelter.Config;
 using Shelter.Models;
 using Shelter.Store;
@@ -48,10 +52,10 @@ namespace Shelter
                             Configuration.Bind("Authentication:AzureAD", opts);
                         });
 
-                        services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, opts =>
-                        {
-                            Configuration.Bind("Authentication:JwtBearer", opts.TokenValidationParameters);
-                        });
+                    services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, opts =>
+                    {
+                        Configuration.Bind("Authentication:JwtBearer", opts.TokenValidationParameters);
+                    });
 
                     break;
                 case "JwtBearer":
@@ -73,13 +77,13 @@ namespace Shelter
             {
                 var scopes = new List<Config.AuthPolicy>();
                 Configuration.Bind("Authentication:Policies", scopes);
-                foreach(var scope in scopes)
+                foreach (var scope in scopes)
                 {
                     opts.AddPolicy(scope.Name, p =>
                     {
                         p.RequireAssertion(ctx =>
                             ctx.User.HasClaim(c => c.Type == "http://schemas.microsoft.com/identity/claims/scope" && c.Value.Split(" ").Contains(scope.Claim)));
-                        p.RequireAssertion(ctx => 
+                        p.RequireAssertion(ctx =>
                             scope.Roles.Any(role => ctx.User.IsInRole(role)));
                         p.AddAuthenticationSchemes(authSchemes.ToArray());
                     });
@@ -94,6 +98,8 @@ namespace Shelter
 
             services.Configure<Seed>(Configuration.GetSection("Seed"));
             services.AddHostedService<Services.SeedService>();
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +114,25 @@ namespace Shelter
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseHealthChecks("/api/v1/health", new HealthCheckOptions()
+            {
+                ResponseWriter = (httpContext, result) =>
+                {
+                    httpContext.Response.ContentType = "application/json";
+
+                    var json = new JObject(
+                        new JProperty("status", result.Status.ToString()),
+                        new JProperty("results", new JObject(result.Entries.Select(pair =>
+                            new JProperty(pair.Key, new JObject(
+                                new JProperty("status", pair.Value.Status.ToString()),
+                                new JProperty("description", pair.Value.Description),
+                                new JProperty("data", new JObject(pair.Value.Data.Select(
+                                    p => new JProperty(p.Key, p.Value))))))))));
+                    return httpContext.Response.WriteAsync(
+                        json.ToString(Formatting.Indented));
+                }
+            });
 
             app.UseAuthentication();
 
